@@ -74,7 +74,8 @@ body {
 
 .filters__show-all,
 .filters__show-active,
-.filters__show-completed {
+.filters__show-completed,
+.filters__clear-completed {
   border: none;
   background-color: white;
 }
