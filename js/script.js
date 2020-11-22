@@ -1,5 +1,6 @@
 let currentID = 0;
 let listElements = [];
+let displayListElems = [];
 
 // let listElement = {
 //   text: "",
@@ -12,23 +13,28 @@ const todoNameInput = document.querySelector(".main-form__input");
 
 function createTodoElement({ id, text, isCompleted }) {
   return `
-    <li class="list-element" id="${id}">
-      <div class="todo-list__element">
-        ${text}
-        <button class="remove-button">X</button>
+    <li class="list-element not-completed" id="${id}">
+      <div class="todo-list__element"> 
+        <button class="check-button">✔</button>
+          ${text}
       </div>
+      <button class="remove-button">❌</button>
     </li>
   `;
 }
 
-// function renderList() {
-//   listNode.innerHTML = "";
-//   listElements.forEach(
-//     (e) =>
-//       (listNode.innerHTML += `
-//         `)
-//   );
-// }
+const filters = {
+  all: (e) => true,
+  completed: (e) => e.isCompleted,
+  notCompleted: (e) => !e.isCompleted,
+};
+
+function renderList() {
+  listNode.innerHTML = "";
+  displayListElems
+    .map(createTodoElement)
+    .forEach((html) => (listNode.innerHTML += html));
+}
 
 function addListElement(text) {
   const newTodo = {
@@ -43,10 +49,18 @@ function addListElement(text) {
 
 document.querySelector(".todo-list").addEventListener("click", (event) => {
   if (event.target.classList.contains("remove-button")) {
-    const li = event.target.parentNode.parentNode;
+    const li = event.target.parentElement;
     listElements = listElements.filter((e) => e.id !== li.id);
     li.remove();
-    console.log(listElements);
+    // console.log(listElements);
+  }
+
+  if (event.target.classList.contains("check-button")) {
+    const li = event.target.parentElement.parentElement;
+    const currTodo = listElements.find((e) => (e.id = li.id));
+    currTodo.isCompleted = !currTodo.isCompleted;
+    li.classList.remove(currTodo.isCompleted ? "not-completed" : "completed");
+    li.classList.add(currTodo.isCompleted ? "completed" : "not-completed");
   }
 });
 

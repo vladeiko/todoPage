@@ -42,13 +42,16 @@ body {
   padding: 0;
 }
 
-.todo-list__element {
+/* .todo-list__element {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
+} */
 
 .list-element {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   list-style-type: none;
   font-size: 20px;
   padding: 15px;
@@ -60,6 +63,11 @@ body {
   outline: none;
   border: none;
   background-color: white;
+}
+
+.completed {
+  color: gray;
+  text-decoration: line-through;
 }
 
 .filters {
