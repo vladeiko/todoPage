@@ -12,15 +12,18 @@ const listNode = document.querySelector(".todo-list");
 const todoNameInput = document.querySelector(".main-form__input");
 
 function createTodoElement({ id, text, isCompleted }) {
-  return `
+  const div = document.createElement("div");
+  div.innerHTML = `
     <li class="list-element not-completed" id="${id}">
       <div class="todo-list__element"> 
         <button class="check-button">✔</button>
-          ${text}
+          <span></span>
       </div>
       <button class="remove-button">❌</button>
     </li>
   `;
+  div.querySelector("span").innerText = text;
+  return div.innerHTML;
 }
 
 const filters = {
