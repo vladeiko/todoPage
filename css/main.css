@@ -46,7 +46,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid rgba(128, 128, 128, 0.11);
 }
 
 .list-element {
@@ -54,6 +53,7 @@ body {
   font-size: 20px;
   padding: 15px;
   color: rgb(68, 68, 68);
+  border: 1px solid rgba(128, 128, 128, 0.11);
 }
 
 .remove-button {
