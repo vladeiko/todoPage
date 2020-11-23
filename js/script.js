@@ -11,19 +11,39 @@ let displayListElems = [];
 const listNode = document.querySelector(".todo-list");
 const todoNameInput = document.querySelector(".main-form__input");
 
+function updateElementsCounter() {
+  const leftItemsCount = listElements.filter((e) => e.isCompleted == false)
+    .length;
+  // console.log(leftItemsCount);
+  document.querySelector(
+    ".filters__counter"
+  ).innerText = `${leftItemsCount} items left`;
+}
+
 function createTodoElement({ id, text, isCompleted }) {
-  const div = document.createElement("div");
-  div.innerHTML = `
-    <li class="list-element not-completed" id="${id}">
-      <div class="todo-list__element"> 
+  let template;
+  if (!isCompleted) {
+    template = `
+    <li class="list-element" id="${id}">
+      <div class="todo-list__element not-completed"> 
         <button class="check-button">✔</button>
-          <span></span>
+          <span>${text}</span>
       </div>
       <button class="remove-button">❌</button>
     </li>
   `;
-  div.querySelector("span").innerText = text;
-  return div.innerHTML;
+  } else {
+    template = `
+    <li class="list-element" id="${id}">
+      <div class="todo-list__element completed">
+        <button class="check-button">✔</button>
+        <span>${text}</span>
+      </div>
+      <button class="remove-button">❌</button>
+    </li>`;
+  }
+
+  listNode.innerHTML = template + listNode.innerHTML;
 }
 
 const filters = {
@@ -32,11 +52,9 @@ const filters = {
   notCompleted: (e) => !e.isCompleted,
 };
 
-function renderList() {
+function renderList(displayListElems) {
   listNode.innerHTML = "";
-  displayListElems
-    .map(createTodoElement)
-    .forEach((html) => (listNode.innerHTML += html));
+  displayListElems.forEach((e) => createTodoElement(e));
 }
 
 function addListElement(text) {
@@ -46,31 +64,79 @@ function addListElement(text) {
     id: `${currentID++}`,
   };
 
-  listElements.unshift(newTodo);
-  listNode.innerHTML = createTodoElement(newTodo) + listNode.innerHTML;
+  listElements.push(newTodo);
+  createTodoElement(newTodo);
+  // listNode.innerHTML = createTodoElement(newTodo) + listNode.innerHTML;
 }
 
-document.querySelector(".todo-list").addEventListener("click", (event) => {
-  if (event.target.classList.contains("remove-button")) {
-    const li = event.target.parentElement;
-    listElements = listElements.filter((e) => e.id !== li.id);
-    li.remove();
+function removeElement(toDelete) {
+  listElements = listElements.filter((e) => e.id !== toDelete.id);
+  toDelete.remove();
+}
+
+function checkElement(toCheck) {
+  const currTodo = listElements.find((e) => e.id === toCheck.id);
+  currTodo.isCompleted = !currTodo.isCompleted;
+  toCheck.firstElementChild.classList.remove(
+    currTodo.isCompleted ? "not-completed" : "completed"
+  );
+  toCheck.firstElementChild.classList.add(
+    currTodo.isCompleted ? "completed" : "not-completed"
+  );
+}
+
+function delCompletedElems() {
+  for (let i = 0; i < listElements.length; i++) {
+    if (listElements[i].isCompleted) {
+      listElements.splice(i, 1);
+      i--;
+    }
+  }
+}
+
+document.querySelector(".todo-list").addEventListener("click", (e) => {
+  if (e.target.classList.contains("remove-button")) {
+    removeElement(e.target.parentElement);
+    updateElementsCounter();
     // console.log(listElements);
   }
 
-  if (event.target.classList.contains("check-button")) {
-    const li = event.target.parentElement.parentElement;
-    const currTodo = listElements.find((e) => (e.id = li.id));
-    currTodo.isCompleted = !currTodo.isCompleted;
-    li.classList.remove(currTodo.isCompleted ? "not-completed" : "completed");
-    li.classList.add(currTodo.isCompleted ? "completed" : "not-completed");
+  if (e.target.classList.contains("check-button")) {
+    checkElement(e.target.parentElement.parentElement);
+    updateElementsCounter();
   }
 });
 
-document.querySelector(".main-form").addEventListener("submit", (event) => {
-  event.preventDefault();
+document.querySelector(".main-form").addEventListener("submit", () => {
   if (todoNameInput.value) {
     addListElement(todoNameInput.value);
     todoNameInput.value = "";
+    updateElementsCounter();
+    // console.log(listElements);
   }
 });
+
+document.querySelector(".filters__show-all").addEventListener("click", () => {
+  renderList(listElements);
+});
+
+document
+  .querySelector(".filters__show-active")
+  .addEventListener("click", () => {
+    displayListElems = listElements.filter((e) => e.isCompleted !== true);
+    renderList(displayListElems);
+  });
+
+document
+  .querySelector(".filters__show-completed")
+  .addEventListener("click", () => {
+    displayListElems = listElements.filter((e) => e.isCompleted == true);
+    renderList(displayListElems);
+  });
+
+document
+  .querySelector(".filters__clear-completed")
+  .addEventListener("click", () => {
+    delCompletedElems();
+    renderList(listElements);
+  });
