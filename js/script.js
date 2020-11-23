@@ -79,8 +79,12 @@ function addListElement(text) {
 }
 
 function removeElement(toDelete) {
-  listElements = listElements.filter((e) => e.id !== toDelete.id);
-  toDelete.remove();
+  for (let i = 0; i < listElements.length; i++) {
+    if (listElements[i].id == toDelete.id) {
+      listElements.splice(i, 1);
+      return;
+    }
+  }
 }
 
 function checkElement(toCheck) {
@@ -105,8 +109,9 @@ function delCompletedElems() {
 
 document.querySelector(".todo-list").addEventListener("click", (e) => {
   if (e.target.classList.contains("remove-button")) {
-    removeElement(e.target.parentElement.parentElement);
+    removeElement(e.target.parentElement);
     updateElementsCounter();
+    renderList(currentFilter);
     // console.log(listElements);
   }
 
