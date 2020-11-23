@@ -42,11 +42,11 @@ body {
   padding: 0;
 }
 
-/* .todo-list__element {
+.todo-list__element {
   display: flex;
-  justify-content: space-between;
+  justify-content: around;
   align-items: center;
-} */
+}
 
 .list-element {
   display: flex;
@@ -57,6 +57,14 @@ body {
   padding: 15px;
   color: rgb(68, 68, 68);
   border: 1px solid rgba(128, 128, 128, 0.11);
+}
+
+.check-button {
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  margin: 10px;
 }
 
 .remove-button {
@@ -85,5 +93,14 @@ body {
 .filters__show-completed,
 .filters__clear-completed {
   border: none;
+  appearance: none;
+  color: grey;
   background-color: white;
+}
+
+.filters__clear-completed,
+.filters__clear-completed:focus {
+  border: none;
+  color: grey;
+  outline: none;
 }

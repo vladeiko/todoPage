@@ -21,10 +21,40 @@
       <ul class="todo-list"></ul>
       <div class="filters">
         <p class="filters__counter">0 items left</p>
-        <button class="filters__show-all">All</button>
-        <button class="filters__show-active">Active</button>
-        <button class="filters__show-completed">Completed</button>
-        <button class="filters__clear-completed">Clear completed</button>
+        <div class="selected-input">
+          <input
+            class="filters__show-all"
+            type="radio"
+            id="radio1"
+            name="radio-filter"
+          />
+          <label for="radio1">All</label>
+        </div>
+        <div class="selected-input">
+          <input
+            class="filters__show-active"
+            type="radio"
+            id="radio2"
+            name="radio-filter"
+          />
+          <label for="radio2">Active</label>
+        </div>
+        <div class="selected-input">
+          <input
+            class="filters__show-completed"
+            type="radio"
+            id="radio3"
+            name="radio-filter"
+          />
+          <label for="radio3">Completed</label>
+        </div>
+        <button
+          class="filters__clear-completed"
+          type="radio"
+          name="radio-filter"
+        >
+          Clear completed
+        </button>
       </div>
     </div>
     <script src="./js/script.js"></script>

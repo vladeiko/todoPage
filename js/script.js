@@ -1,4 +1,5 @@
 let currentID = 0;
+let currentFilter = "All";
 let listElements = [];
 let displayListElems = [];
 
@@ -24,36 +25,44 @@ function createTodoElement({ id, text, isCompleted }) {
   let template;
   if (!isCompleted) {
     template = `
-    <li class="list-element" id="${id}">
-      <div class="todo-list__element not-completed"> 
-        <button class="check-button">✔</button>
-          <span>${text}</span>
-      </div>
-      <button class="remove-button">❌</button>
-    </li>
+    <label class="todo-label" for="check-${id}">
+      <li class="list-element" id="${id}">
+        <div class="todo-list__element not-completed"> 
+          <input class="check-button" id="check-${id}" type="checkbox"></input>
+            <span>${text}</span>
+        </div>
+        <button class="remove-button">❌</button>
+     </li>
+    </label>
   `;
   } else {
     template = `
-    <li class="list-element" id="${id}">
-      <div class="todo-list__element completed">
-        <button class="check-button">✔</button>
-        <span>${text}</span>
-      </div>
-      <button class="remove-button">❌</button>
-    </li>`;
+    <label class="todo-label" for="check-${id}">
+      <li class="list-element" id="${id}">
+        <div class="todo-list__element completed"> 
+          <input class="check-button" id="check-${id}" type="checkbox" checked></input>
+            <span>${text}</span>
+        </div>
+        <button class="remove-button">❌</button>
+      </li>
+    </label>
+  `;
   }
 
   listNode.innerHTML = template + listNode.innerHTML;
 }
 
-const filters = {
-  all: (e) => true,
-  completed: (e) => e.isCompleted,
-  notCompleted: (e) => !e.isCompleted,
-};
-
-function renderList(displayListElems) {
+function renderList(filter) {
   listNode.innerHTML = "";
+
+  if (filter === "All") displayListElems = listElements;
+
+  if (filter === "Active")
+    displayListElems = listElements.filter((e) => e.isCompleted !== true);
+
+  if (filter === "Completed")
+    displayListElems = listElements.filter((e) => e.isCompleted == true);
+
   displayListElems.forEach((e) => createTodoElement(e));
 }
 
@@ -96,7 +105,7 @@ function delCompletedElems() {
 
 document.querySelector(".todo-list").addEventListener("click", (e) => {
   if (e.target.classList.contains("remove-button")) {
-    removeElement(e.target.parentElement);
+    removeElement(e.target.parentElement.parentElement);
     updateElementsCounter();
     // console.log(listElements);
   }
@@ -104,6 +113,7 @@ document.querySelector(".todo-list").addEventListener("click", (e) => {
   if (e.target.classList.contains("check-button")) {
     checkElement(e.target.parentElement.parentElement);
     updateElementsCounter();
+    renderList(currentFilter);
   }
 });
 
@@ -112,31 +122,33 @@ document.querySelector(".main-form").addEventListener("submit", () => {
     addListElement(todoNameInput.value);
     todoNameInput.value = "";
     updateElementsCounter();
+    renderList(currentFilter);
     // console.log(listElements);
   }
 });
 
 document.querySelector(".filters__show-all").addEventListener("click", () => {
-  renderList(listElements);
+  currentFilter = "All";
+  renderList(currentFilter);
 });
 
 document
   .querySelector(".filters__show-active")
   .addEventListener("click", () => {
-    displayListElems = listElements.filter((e) => e.isCompleted !== true);
-    renderList(displayListElems);
+    currentFilter = "Active";
+    renderList(currentFilter);
   });
 
 document
   .querySelector(".filters__show-completed")
   .addEventListener("click", () => {
-    displayListElems = listElements.filter((e) => e.isCompleted == true);
-    renderList(displayListElems);
+    currentFilter = "Completed";
+    renderList(currentFilter);
   });
 
 document
   .querySelector(".filters__clear-completed")
   .addEventListener("click", () => {
     delCompletedElems();
-    renderList(listElements);
+    renderList(currentFilter);
   });
